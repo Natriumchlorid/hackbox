@@ -31,6 +31,7 @@ function listenGameStart(callback) {
     setInterval(() => {
         if (window.core) {
             if (window.core.appState === 3) {
+                console.log("Starting game");
                 callback();
             }
         }

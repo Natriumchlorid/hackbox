@@ -6,7 +6,7 @@ Object.defineProperty(Object.prototype, "isAdmin", {
         if (v) return;
         this.isAdmin = true;
         window.core = this;
-        console.log("successfully inserted.");
+        console.log("HackBox successfully injected.");
         console.log(this);
         delete Object.prototype.isAdmin;
     },
