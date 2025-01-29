@@ -5,14 +5,15 @@ class Quaternion{
         this.y = y;
         this.z = z;
     }
-    mul(pw,px,py,pz){
-        return new Quaternion(this.w * pw,
-        this.x * px,
-        this.y * py,
-        this.z * pz);
+    cross(pw, px, py, pz){
+        let w= this.w * pw - this.x * px - this.y * py - this.z * pz;
+        let x= this.w * px + this.x * pw + this.y * pz - this.z * py;
+        let y= this.w * py - this.x * pz + this.y * pw + this.z * px;
+        let z= this.w * pz + this.x * py - this.y * px + this.z * pw;
+        return new Quaternion(w, x, y, z);
     }
     inv(){
-        return new Quaternion(this.w,-this.x,-this.y,-this.z);
+        return new Quaternion(this.w, -this.x, -this.y, -this.z);
     }
 }
 
@@ -50,7 +51,7 @@ listenGameStart(()=> {
     listenKeyHold('r', function () {
         let base = new Quaternion(0, 1, 0, 0);
         let q = new Quaternion(...rotation);
-        let rq = q.mul(base).mul(base.inv());
+        let rq = q.cross(base).cross(base.inv());
         player.vx = rq.x * 2;
         player.vy = rq.z * 2;
         player.vz = rq.y * 2;
