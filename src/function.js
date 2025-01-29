@@ -54,9 +54,9 @@ listenGameStart(() => {
     listenKeyHold('r', function () {
         let base = new Quaternion(0, 1, 0, 0);
         let q = new Quaternion(...rotation);
-        let rq = q.cross(base).cross(base.inv());
-        player.vx = rq.x * 2;
-        player.vy = rq.z * 2;
-        player.vz = rq.y * 2;
+        let rq = q.cross(base).cross(q.inv());
+        player.vx = rq.z * 2;
+        player.vy = -rq.y * 2 + 0.1;
+        player.vz = rq.x * 2;
     });
 });
