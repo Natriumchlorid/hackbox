@@ -6,11 +6,11 @@ class Quaternion {
         this.z = z;
     }
 
-    cross(pw, px, py, pz) {
-        let w = this.w * pw - this.x * px - this.y * py - this.z * pz;
-        let x = this.w * px + this.x * pw + this.y * pz - this.z * py;
-        let y = this.w * py - this.x * pz + this.y * pw + this.z * px;
-        let z = this.w * pz + this.x * py - this.y * px + this.z * pw;
+    cross(q) {
+        let w = this.w * q.w - this.x * q.x - this.y * q.y - this.z * q.z;
+        let x = this.w * q.x + this.x * q.w + this.y * q.z - this.z * q.y;
+        let y = this.w * q.y - this.x * q.z + this.y * q.w + this.z * q.x;
+        let z = this.w * q.z + this.x * q.y - this.y * q.x + this.z * q.w;
         return new Quaternion(w, x, y, z);
     }
 
