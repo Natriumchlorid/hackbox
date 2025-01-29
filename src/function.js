@@ -24,16 +24,12 @@ class Vector3{
     }
 }
 
-let id = window.core.game.state.secret.id;
-/**@type {Number[]}*/
-let rotation = window.core.game.state.camera.rotation;
-let bodies = window.core.game.state.bodies;
-let player = bodies.find((v)=>v.id===id)
-
 function listenGameStart(callback){
     setInterval(() => {
-        if(window.core.appState===3){
-            callback();
+        if(window.core) {
+            if (window.core.appState === 3) {
+                callback();
+            }
         }
     },1000);
 }
@@ -44,7 +40,13 @@ function listenKeyHold(key,callback){
 }
 
 listenGameStart(()=> {
-//JetPack
+    let id = window.core.game.state.secret.id;
+    /**@type {Number[]}*/
+    let rotation = window.core.game.state.camera.rotation;
+    let bodies = window.core.game.state.bodies;
+    let player = bodies.find((v)=>v.id===id)
+
+    //JetPack
     listenKeyHold('r', function () {
         let base = new Quaternion(0, 1, 0, 0);
         let q = new Quaternion(...rotation);
