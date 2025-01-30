@@ -1,4 +1,4 @@
-import {trigger} from "./sidebar.js";
+import {add, remove, trigger} from "./sidebar.js";
 
 class Quaternion {
     constructor(w, x, y, z) {
@@ -29,11 +29,16 @@ class Vector3 {
     }
 }
 
+function setVoxels(x, y, z, id) {
+    window.core.game.voxel._setVoxel(x, y, z, id);
+}
+
 function listenGameStart(callback) {
     let handler = setInterval(() => {
         if (window.core) {
             if (window.core.appState === 3) {
                 console.log("Starting game");
+                globalThis.started = true;
                 callback();
                 clearInterval(handler);
             }
@@ -55,26 +60,38 @@ function listenKeyDown(key, callback) {
 
 function listenKeyClick(key, callback) {
     let triggered = false;
-    listenKeyDown(key, function () {
-        if (triggered) return;
-        triggered = true;
-        callback();
+    document.addEventListener("keydown", function (event) {
+        if (event.key === key) {
+            triggered = true;
+            callback();
+        }
     });
+    document.addEventListener("keyup", function (event) {
+        if (event.key === key) triggered = false;
+    })
 }
 
 listenGameStart(() => {
     let id = window.core.game.state.secret.id;
-    /**@type {Number[]}*/
     let rotation = window.core.game.state.camera.rotation;
     let bodies = window.core.game.state.bodies;
-    let player = bodies.find((v) => v.id === id)
+    /**@namespace
+     * @prop {number} px
+     * @prop {number} py
+     * @prop {number} pz
+     * @prop {number} vx
+     * @prop {number} vy
+     * @prop {number} vz
+     * */
+    let player = bodies.find((v) => v.id === id);
+    globalThis.player = player;
 
     //JetPack
-    listenKeyClick('r', function () {
-        trigger('JetPack');
+    listenKeyDown('r', function () {
+        add('JetPack');
     });
     listenKeyUp('r', function () {
-        trigger('JetPack');
+        remove('JetPack');
     });
     listenKeyDown('r', function () {
         let base = new Quaternion(0, 1, 0, 0);
@@ -86,5 +103,16 @@ listenGameStart(() => {
     });
 
     //AutoPave
-    listenKeyDown('r', function () {})
+    let autoPaveHandler = null;
+    listenKeyClick('2', function () {
+        if (autoPaveHandler === null) {
+            autoPaveHandler = setInterval(() => {
+                setVoxels(Math.round(player.px - 0.5), Math.floor(player.py - 1.5), Math.round(player.pz - 0.5), 170);
+            }, 50);
+        } else {
+            clearInterval(autoPaveHandler);
+            autoPaveHandler = null;
+        }
+        trigger('AutoPave');
+    });
 });

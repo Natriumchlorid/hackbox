@@ -1,16 +1,17 @@
 <script>
-    import {itemList} from "./sidebar.js";
+    import {itemStore} from "./sidebar.js";
+
 </script>
 <main>
     <div class="container">
-        {#each itemList as item}
+        {#each $itemStore as item}
             {item}
         {/each}
     </div>
 </main>
 <style>
     div.container{
-        height: 80%;
+        height: 85%;
         width: 20em;
         right: 0;
         top: 15%;
