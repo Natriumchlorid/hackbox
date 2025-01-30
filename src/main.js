@@ -1,5 +1,6 @@
 import {mount} from 'svelte';
 import App from './App.svelte';
+import './loading.js';
 import './getCore.js';
 import './function.js';
 
