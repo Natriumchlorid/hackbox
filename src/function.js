@@ -53,6 +53,15 @@ function listenKeyDown(key, callback) {
     });
 }
 
+function listenKeyClick(key, callback) {
+    let triggered = false;
+    listenKeyDown(key, function () {
+        if (triggered) return;
+        triggered = true;
+        callback();
+    });
+}
+
 listenGameStart(() => {
     let id = window.core.game.state.secret.id;
     /**@type {Number[]}*/
@@ -61,17 +70,12 @@ listenGameStart(() => {
     let player = bodies.find((v) => v.id === id)
 
     //JetPack
-    let jetPackSwitch = false;
-    listenKeyDown('r', function () {
-        if(jetPackSwitch) return;
-        jetPackSwitch = true;
-        console.log("r down")
+    listenKeyClick('r', function () {
         trigger('JetPack');
-    })
+    });
     listenKeyUp('r', function () {
-        jetPackSwitch = false;
         trigger('JetPack');
-    })
+    });
     listenKeyDown('r', function () {
         let base = new Quaternion(0, 1, 0, 0);
         let q = new Quaternion(...rotation);
@@ -80,4 +84,7 @@ listenGameStart(() => {
         player.vy = -rq.y * 2 + 0.1;
         player.vz = rq.x * 2;
     });
+
+    //AutoPave
+    listenKeyDown('r', function () {})
 });
