@@ -1,3 +1,5 @@
+import {trigger} from "./sidebar.js";
+
 class Quaternion {
     constructor(w, x, y, z) {
         this.w = w;
@@ -28,19 +30,26 @@ class Vector3 {
 }
 
 function listenGameStart(callback) {
-    setInterval(() => {
+    let handler = setInterval(() => {
         if (window.core) {
             if (window.core.appState === 3) {
                 console.log("Starting game");
                 callback();
+                clearInterval(handler);
             }
         }
     }, 1000);
 }
 
-function listenKeyHold(key, callback) {
-    document.addEventListener("keypress", function (e) {
-        if (e.key === key) callback();
+function listenKeyUp(key, callback) {
+    document.addEventListener('keyup', function (event) {
+        if (event.key === key) callback();
+    });
+}
+
+function listenKeyDown(key, callback) {
+    document.addEventListener("keydown", function (event) {
+        if (event.key === key) callback();
     });
 }
 
@@ -52,7 +61,18 @@ listenGameStart(() => {
     let player = bodies.find((v) => v.id === id)
 
     //JetPack
-    listenKeyHold('r', function () {
+    let jetPackSwitch = false;
+    listenKeyDown('r', function () {
+        if(jetPackSwitch) return;
+        jetPackSwitch = true;
+        console.log("r down")
+        trigger('JetPack');
+    })
+    listenKeyUp('r', function () {
+        jetPackSwitch = false;
+        trigger('JetPack');
+    })
+    listenKeyDown('r', function () {
         let base = new Quaternion(0, 1, 0, 0);
         let q = new Quaternion(...rotation);
         let rq = q.cross(base).cross(q.inv());
