@@ -1,11 +1,11 @@
 <script>
     import {itemStore} from "./sidebar.js";
-
+    import Item from "./Item.svelte";
 </script>
 <main>
     <div class="container">
         {#each $itemStore as item}
-            {item}
+            <Item>{item}</Item>
         {/each}
     </div>
 </main>
